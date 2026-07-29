@@ -658,3 +658,4 @@ init_model_with_meta_device: false
 
 见 docs/experiment_result.md
 ![alt text](image-3.png)
+![alt text](image-4.png)
