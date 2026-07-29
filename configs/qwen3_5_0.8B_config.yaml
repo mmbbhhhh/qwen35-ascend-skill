@@ -31,7 +31,7 @@ data:
 
     # 数据预处理
     preprocess_parameters:
-      model_name_or_path: &HF_MODEL_LOAD_PATH ./ckpt/hf_path/Qwen3.5-0.8B # 替换为原始hf权重
+      model_name_or_path: &HF_MODEL_LOAD_PATH /workspace/MindSpeed-MM/ckpt/hf_path/Qwen3.5-0.8B # 替换为原始hf权重
       use_fast_tokenizer: true
       split_special_tokens: false
       image_max_pixels: 262144
@@ -45,10 +45,10 @@ data:
       cutoff_len: 2048
       template: qwen3_vl_nothink
       enable_thinking: false
-      train_on_prompt: false
+      train_on_prompt: false     
       mask_history: false
-      dataset_dir: ./data/mocked_vl_data   #需要改的
-      dataset:  ./data/mocked_vl_data/mock_data_pic_num_2_textlen_2048.json   #需要改的
+      dataset_dir: ./data/coco  #需要改的
+      dataset:  ./data/output_llava_coco_data.json   #需要改的
       cache_dir: ./cache_dir/
       overwrite_cache: false
       preprocess_on_fly: true
@@ -59,7 +59,7 @@ data:
   # 数据加载
   dataloader_param:
     pin_memory: true
-    shuffle: true
+    shuffle: true    #改了的
     dataloader_mode: sampler
     drop_last: true
     sampler_type: BaseRandomBatchSampler
@@ -91,18 +91,18 @@ features:
     loss_type: default   # If you want raw loss in model, loss_type can be set to "raw".
     router_aux_loss_coef: 0.0
   # 重计算配置
-  recompute: true
+  recompute: true   #新修改的
   recompute_plan:
       apply_modules:
         - model.visual.blocks.{*}
         - model.language_model.layers.{*}
   # chunkloss配置
-  enable_chunk_loss: true
+  enable_chunk_loss: true   #新修改的
   chunkloss_plan:
     apply_module: lm_head
     chunk_size: 1024
   # activation offload 配置
-  enable_activation_offload: true
+  enable_activation_offload: true  #新修改的
   activation_offload_plan:
     apply_modules:
      - model.visual.blocks.{*}
@@ -126,18 +126,18 @@ training:
   lr_decay_style: cosine
   lr_warmup_ratio: 0.1
   weight_decay: 0
-  train_iters: 20   #改了的
+  train_iters: 500   #改了的
   clip_grad: 0.0
-  init_model_with_meta_device: true
+  init_model_with_meta_device: false  #新修改的
   optimizer: adamw
   adam_fused: true
-  save_interval: 0    #改了的
+  save_interval: 100   #改了的
   no_load_optim: true  # Do not load optimizer state; remove if loading is needed.
   no_load_rng: true  # Do not load RNG state; remove if loading is needed.
   no_save_optim: true  # Do not save optimizer state; remove if saving is needed.
   no_save_rng: true  # Do not save RNG state; remove if saving is needed.
   load: ""  # 暂时关闭dcp权重替换为转换后的dcp权重
-  save: ./save_path
+  save: /workspace/qwen35_ascend_skill/checkpoints/qwen3.5-0.8B-finetune  #修改了的
   use_deter_comp: false
   plugin:
     - mindspeed_mm/fsdp/models/qwen3_5

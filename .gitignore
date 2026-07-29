@@ -1,0 +1,28 @@
+# model
+ckpt/
+checkpoint/
+checkpoints/
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# dataset
+data/
+user_data/
+
+# cache
+cache_dir/
+.cache/
+
+# logs
+logs/
+*.log
+
+# python
+__pycache__/
+*.pyc
+
+# archive
+*.tar.gz
+*.zip

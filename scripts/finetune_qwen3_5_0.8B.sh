@@ -1,9 +1,7 @@
-# 根据实际情况修改 ascend-toolkit 路径
-cd /workspace/MindSpeed-MM
+#!/bin/bash
+
 source /usr/local/Ascend/cann/set_env.sh
-export HCCL_DEBUG_LEVEL=1
-export ASCEND_GLOBAL_LOG_LEVEL=1
-export HCCL_CONNECT_TIMEOUT=600
+
 export NON_MEGATRON=true
 export MULTI_STREAM_MEMORY_REUSE=2
 export TASK_QUEUE_ENABLE=2
@@ -11,35 +9,38 @@ export ASCEND_LAUNCH_BLOCKING=0
 export ACLNN_CACHE_LIMIT=100000
 export CPU_AFFINITY_CONF=1
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
+export PYTHONPATH=/workspace/MindSpeed-MM:$PYTHONPATH  #需要告知mindspeed在哪里
+export HCCL_CONNECT_TIMEOUT=600
+export HCCL_EXEC_TIMEOUT=1800
+export HCCL_ASYNC_ERROR_HANDLING=1
+export HCCL_OP_EXPANSION_MODE=AIV       #关闭了hccl优化
+cd /workspace/qwen35_ascend_skill
 
-# 删除triton的cache
-# export TRITON_CACHE_DIR=./triton_cache
-# rm -rf $TRITON_CACHE_DIR/*
 
-NPUS_PER_NODE=2     #修改成2个
-MASTER_ADDR=172.17.0.5    #修改
+NPUS_PER_NODE=2
+MASTER_ADDR=172.17.0.6     #需要修改的
 MASTER_PORT=6000
 NNODES=1
 NODE_RANK=0
-WORLD_SIZE=$(($NPUS_PER_NODE*$NNODES))
+
 
 DISTRIBUTED_ARGS="
-    --nproc_per_node $NPUS_PER_NODE \
-    --nnodes $NNODES \
-    --node_rank $NODE_RANK \
-    --master_addr $MASTER_ADDR \
-    --master_port $MASTER_PORT
+--nproc_per_node $NPUS_PER_NODE \
+--nnodes $NNODES \
+--node_rank $NODE_RANK \
+--master_addr $MASTER_ADDR \
+--master_port $MASTER_PORT
 "
 
-logfile=$(date +%Y%m%d)_$(date +%H%M%S)
-config_path=examples/qwen3_5/qwen3_5_0.8B_config.yaml
-mkdir -p logs
-torchrun $DISTRIBUTED_ARGS mindspeed_mm/fsdp/train/trainer.py \
-    ${config_path} \
-    2>&1 | tee logs/train_${logfile}.log
 
-STEP_TIME=`grep "elapsed time per iteration" logs/train_${logfile}.log | awk -F 'elapsed time per iteration [(]ms[)]:' '{print$2}' | awk -F '|' '{print$1}' | head -n 200 | tail -n 100 | awk '{sum+=$1} END {if (NR != 0) printf("%.1f",sum/NR)}'`
-GBS=`grep "global batch size" logs/train_${logfile}.log | awk -F 'global batch size:' '{print$2}' | awk -F '|' '{print$1}' | head -n 1 | awk '{print $1}'`
-SAMPLES_PER_SECOND=`awk 'BEGIN{printf "%.3f\n", '${GBS}'*1000/'${STEP_TIME}'}'`
-echo "Elapsed Time Per iteration (ms): $STEP_TIME" | tee -a logs/train_${logfile}.log
-echo "Average Samples per Second: $SAMPLES_PER_SECOND" | tee -a logs/train_${logfile}.log
+logfile=$(date +%Y%m%d)_$(date +%H%M%S)
+
+
+config_path=/workspace/qwen35_ascend_skill/configs/qwen3_5_0.8B_config.yaml   #需要修改的告诉config在哪里
+
+
+mkdir -p logs
+
+
+torchrun $DISTRIBUTED_ARGS /workspace/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py \
+    ${config_path}     #需要修改的 用于告诉系统trainer.py在哪里
