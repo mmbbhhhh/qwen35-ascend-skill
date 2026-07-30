@@ -659,3 +659,9 @@ init_model_with_meta_device: false
 见 docs/experiment_result.md
 ![alt text](image-3.png)
 ![alt text](image-4.png)
+
+ source /usr/local/Ascend/cann/set_env.sh
+ bash scripts/install.sh      #下载mindspeed-mm
+ bash scripts/download_model.sh    #下载下来model权重
+ bash scripts/prepare_data.sh      #下载下来coco数据集
+ bash scripts/finetune_qwen3_5_0.8B.sh  #执行开始脚本
