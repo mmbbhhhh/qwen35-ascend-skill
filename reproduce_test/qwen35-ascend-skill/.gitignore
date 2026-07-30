@@ -1,0 +1,18 @@
+# dataset
+data/
+
+# cache
+cache_dir/
+
+# checkpoints
+checkpoints/
+
+# model files
+ckpt/
+
+# compressed dataset
+*.zip
+
+# python cache
+__pycache__/
+*.pyc
