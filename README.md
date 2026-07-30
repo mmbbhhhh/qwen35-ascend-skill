@@ -660,6 +660,10 @@ init_model_with_meta_device: false
 ![alt text](image-3.png)
 ![alt text](image-4.png)
 
+![alt text](image-5.png)
+ reproduce_test/qwen35-ascend-skill是复现成功的证明
+
+ 执行过程
  source /usr/local/Ascend/cann/set_env.sh
  bash scripts/install.sh      #下载mindspeed-mm
  bash scripts/download_model.sh    #下载下来model权重
