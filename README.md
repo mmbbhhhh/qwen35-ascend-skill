@@ -360,8 +360,9 @@ grad norm:
 
 
 ---
-![alt text](1785231634708.jpg)
 ![alt text](image-2.png)
+![alt text](1785231634708.jpg)
+
 
 
 # 7. Loss变化分析
@@ -658,10 +659,8 @@ init_model_with_meta_device: false
 
 见 docs/experiment_result.md
 ![alt text](image-3.png)
-![alt text](image-4.png)
 
-![alt text](image-5.png)
- reproduce_test/qwen35-ascend-skill是复现成功的证明
+ reproduce_test/qwen35-ascend-skill是复现成功的实验
 
  执行过程
  source /usr/local/Ascend/cann/set_env.sh
