@@ -1,7 +1,4 @@
-复现的实验结果图片
-![alt text](58adbea76045ef5f032e255c8ca7d8b.png)
-![alt text](2b88d8b05d128399c0de1facc3b1436.png)
-# Qwen3.5-0.8B Ascend NPU Fine-tuning Skill 使用说明
+# Qwen3.5-0.8B Ascend NPU Fine-tuning Skill 说明
 
 
 ## 1. 实验简介
